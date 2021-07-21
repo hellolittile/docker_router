@@ -15,10 +15,17 @@
 * 需要docker容器来管理宿主机网络,所以会对宿主机网络产生影响.
 
 使用方法:
+
 安装docker[参见docker官方文档](https://docs.docker.com/engine/install/ubuntu/) 
+
 安装docker-compose
+
 `sudo apt install docker-compose`
+
 启动:
+
 `sudo docker-compose up -d`
+
 停止:
+
 `sudo docker-compose down`
