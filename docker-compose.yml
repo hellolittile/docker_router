@@ -1,0 +1,11 @@
+version: "3.3"  
+services:
+  router:
+    build: .
+    container_name: docker_router
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
+    command:
+      /etc/init.d/init
+    

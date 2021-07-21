@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# change first interface to wan
+if [[ -z `ls /sys/class/net/|grep '^wan$'` ]] ; then
+        wan=`ls /sys/class/net/|sort |grep enp|head -n1`
+        ifconfig $wan down
+        ip link set $wan name wan
+        ifconfig wan up
+fi
+
+# add lan and set ipaddress
+if [[ -z `ls /sys/class/net/|grep '^lan$'` ]] ; then
+	/usr/sbin/brctl addbr lan
+fi
+/sbin/ifconfig lan up
+/sbin/ip addr add $IPV4NET dev lan
+/sbin/ip addr add $IPV6NET dev lan
+
+/sbin/ip6tables-restore < /etc/iptables/rules6
+/sbin/iptables-restore < /etc/iptables/rules
+/usr/bin/supervisord -j /var/run/supervisord.pid -c /etc/supervisord.conf
