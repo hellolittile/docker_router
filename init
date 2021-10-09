@@ -16,6 +16,13 @@ fi
 /sbin/ip addr add $IPV4NET dev lan
 /sbin/ip addr add $IPV6NET dev lan
 
-/sbin/ip6tables-restore < /etc/iptables/rules6
+# iptables 
+# lan nat to wan
+/sbin/ip6tables -t nat -A POSTROUTING -s fd00::/64 -o wan -j MASQUERADE
+# allow ssh from lan
+/sbin/ip6tables -A INPUT -s IPV6NET -p tcp -m tcp --dport 22 -j ACCEPT
+# allow radvd dns from lan
+/sbin/ip6tables -A INPUT -s IPV4NET -p udp -m multiport --dports 53,58 -j ACCEPT
+
 /sbin/iptables-restore < /etc/iptables/rules
 /usr/bin/supervisord -j /var/run/supervisord.pid -c /etc/supervisord.conf
